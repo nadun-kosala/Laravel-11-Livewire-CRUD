@@ -8,11 +8,18 @@ use App\Models\Story;
 class Post extends Component
 {
     public $isOpenCreateModal = false;
+    public $isOpenEditPostModal = false;
+    public $isOpenDeletePostModal = false;
 
     public $title;
     public $category;
     public $content;
     public $posts = [];
+
+    public $updateTitle;
+    public $updateCategory;
+    public $updateContent;
+    public $editPost;
 
     protected $rules = [
         'title' => 'required|string|max:255',
@@ -39,6 +46,34 @@ class Post extends Component
             'content' => $this->content,
         ]);
         $this->isOpenCreateModal = false;
+    }
+
+    public function openEditPostModal($id)
+    {
+        $this->editPost = Story::findOrFail($id);
+        $this->updateTitle = $this->editPost->title;
+        $this->updateCategory = $this->editPost->category;
+        $this->updateContent = $this->editPost->content;
+        $this->isOpenEditPostModal = true;
+    }
+
+    public function closeEditPostModal()
+    {
+        $this->isOpenEditPostModal = false;
+    }
+
+    public function updatePost($id)
+    {
+        $this->editPost = Story::findOrFail($id);
+        $this->editPost->title = $this->updateTitle;
+        $this->editPost->category = $this->updateCategory;
+        $this->editPost->content = $this->updateContent;
+        $this->editPost->save();
+        $this->isOpenEditPostModal = false;
+    }
+
+    public function openDeletePostModal(){
+        $this->isOpenDeletePostModal = true;
     }
 
     public function render()
