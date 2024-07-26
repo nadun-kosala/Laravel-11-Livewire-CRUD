@@ -29,6 +29,11 @@ class Post extends Component
         'content' => 'required',
     ];
 
+    public function resetField()
+    {
+        $this->reset(['title', 'category', 'content']);
+    }
+
     public function openCreatePostModal()
     {
         $this->isOpenCreateModal = true;
@@ -37,6 +42,7 @@ class Post extends Component
     public function closeCreatePostModal()
     {
         $this->isOpenCreateModal = false;
+        $this->resetField();
     }
 
     public function createPost()
@@ -48,6 +54,11 @@ class Post extends Component
             'content' => $this->content,
         ]);
         $this->isOpenCreateModal = false;
+
+        $this->resetField();
+
+        session()->flash('message', 'Post successfully created');
+        session()->flash('type', 'success');
     }
 
     public function openEditPostModal($id)
