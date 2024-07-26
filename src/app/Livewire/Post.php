@@ -23,6 +23,8 @@ class Post extends Component
 
     public $deletePost;
 
+    public $openToast = false;
+
     protected $rules = [
         'title' => 'required|string|max:255',
         'category' => 'required',
@@ -83,6 +85,9 @@ class Post extends Component
         $this->editPost->content = $this->updateContent;
         $this->editPost->save();
         $this->isOpenEditPostModal = false;
+
+        session()->flash('message', 'Post successfully updated');
+        session()->flash('type', 'success');
     }
 
     public function openDeletePostModal($id)
@@ -100,10 +105,23 @@ class Post extends Component
         $deletePost = Story::findOrFail($id);
         $deletePost->delete();
         $this->isOpenDeletePostModal = false;
+
+        session()->flash('message', 'Post successfully deleted');
+        session()->flash('type', 'danger');
+    }
+
+    public function closeNotification()
+    {
+        if (!session()->has('message')) {
+            $this->openToast = true;
+        }
     }
 
     public function render()
     {
+        if (!session()->has('message')) {
+            $this->openToast = false;
+        }
         $this->posts = Story::all();
         return view('livewire.post', $this->posts);
     }
