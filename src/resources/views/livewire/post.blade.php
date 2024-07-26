@@ -1,14 +1,4 @@
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    <div class="mt-5">
-        <button wire:click="openCreatePostModal"
-            class="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-medium transition-all bg-blue-600 rounded-full hover:bg-white group">
-            <span
-                class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-full"></span>
-            <span
-                class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-blue-600">
-                Create Post</span>
-        </button>
-    </div>
     @if ($isOpenCreateModal)
         <div>
             <div
@@ -93,7 +83,9 @@
 
     <div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h1>Latest Posts</h1>
+            <h1
+                class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+                Latest Posts</h1>
 
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -116,32 +108,42 @@
                     </tr>
                 </thead>
                 @foreach ($posts as $post)
-                <tbody>
-                    <tr
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                           #{{ $post->id}}
-                        </th>
-                        <td class="px-6 py-4">
-                            {{ $post->title}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $post->category}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ Str::words($post->content, 15)}}
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="#"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                </tbody>
+                    <tbody>
+                        <tr
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                #{{ $post->id }}
+                            </th>
+                            <td class="px-6 py-4">
+                                {{ $post->title }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $post->category }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ Str::words($post->content, 15) }}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="#"
+                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            </td>
+                        </tr>
+                    </tbody>
                 @endforeach
             </table>
         </div>
+    </div>
 
+    <div class="mt-5">
+        <button wire:click="openCreatePostModal"
+            class="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-medium transition-all bg-blue-600 rounded-full hover:bg-white group">
+            <span
+                class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-full"></span>
+            <span
+                class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-blue-600">
+                Create Post</span>
+        </button>
     </div>
 
 </div>
