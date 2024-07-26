@@ -17,7 +17,6 @@ class Post extends Component
     public $title;
     public $category;
     public $content;
-    // public $posts = [];
 
     public $updateTitle;
     public $updateCategory;
@@ -82,6 +81,11 @@ class Post extends Component
 
     public function updatePost($id)
     {
+        $this->validate([
+            'updateTitle' => 'required|string|max:255',
+            'updateCategory' => 'required',
+            'updateContent' => 'required',
+        ]);
         $this->editPost = Story::findOrFail($id);
         $this->editPost->title = $this->updateTitle;
         $this->editPost->category = $this->updateCategory;
