@@ -12,6 +12,7 @@ class Post extends Component
     public $title;
     public $category;
     public $content;
+    public $posts = [];
 
     protected $rules = [
         'title' => 'required|string|max:255',
@@ -42,6 +43,7 @@ class Post extends Component
 
     public function render()
     {
-        return view('livewire.post');
+        $this->posts = Story::all();
+        return view('livewire.post', $this->posts);
     }
 }
