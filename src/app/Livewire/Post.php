@@ -4,9 +4,12 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Story;
+use Livewire\WithPagination;
 
 class Post extends Component
 {
+    use WithPagination;
+
     public $isOpenCreateModal = false;
     public $isOpenEditPostModal = false;
     public $isOpenDeletePostModal = false;
@@ -14,7 +17,7 @@ class Post extends Component
     public $title;
     public $category;
     public $content;
-    public $posts = [];
+    // public $posts = [];
 
     public $updateTitle;
     public $updateCategory;
@@ -122,7 +125,7 @@ class Post extends Component
         if (!session()->has('message')) {
             $this->openToast = false;
         }
-        $this->posts = Story::all();
-        return view('livewire.post', $this->posts);
+        $posts = Story::paginate(5);
+        return view('livewire.post', ['posts' => $posts]);
     }
 }
