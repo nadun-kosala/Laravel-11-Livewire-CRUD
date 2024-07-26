@@ -21,6 +21,8 @@ class Post extends Component
     public $updateContent;
     public $editPost;
 
+    public $deletePost;
+
     protected $rules = [
         'title' => 'required|string|max:255',
         'category' => 'required',
@@ -72,8 +74,21 @@ class Post extends Component
         $this->isOpenEditPostModal = false;
     }
 
-    public function openDeletePostModal(){
+    public function openDeletePostModal($id)
+    {
+        $this->deletePost = Story::findOrFail($id);
         $this->isOpenDeletePostModal = true;
+    }
+    public function closeDeletePostModal()
+    {
+        $this->isOpenDeletePostModal = false;
+    }
+
+    public function confirmDeletePost($id)
+    {
+        $deletePost = Story::findOrFail($id);
+        $deletePost->delete();
+        $this->isOpenDeletePostModal = false;
     }
 
     public function render()
