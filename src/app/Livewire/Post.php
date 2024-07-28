@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Story;
 use Livewire\WithPagination;
+use App\Helpers\PostHelper;
 
 class Post extends Component
 {
@@ -52,11 +53,13 @@ class Post extends Component
     public function createPost()
     {
         $this->validate();
-        $post = Story::create([
+        $story = new Story([
             'title' => $this->title,
             'category' => $this->category,
             'content' => $this->content,
         ]);
+        $helper = new PostHelper();
+        $helper->createPost($story);
         $this->isOpenCreateModal = false;
 
         $this->resetField();
@@ -86,11 +89,14 @@ class Post extends Component
             'updateCategory' => 'required',
             'updateContent' => 'required',
         ]);
-        $this->editPost = Story::findOrFail($id);
-        $this->editPost->title = $this->updateTitle;
-        $this->editPost->category = $this->updateCategory;
-        $this->editPost->content = $this->updateContent;
-        $this->editPost->save();
+        $updateStory = new Story([
+            'title' => $this->updateTitle,
+            'category' => $this->updateCategory,
+            'content' => $this->updateContent,
+        ]);
+        $helper = new PostHelper();
+        $helper->updatePost($id, $updateStory);
+
         $this->isOpenEditPostModal = false;
 
         session()->flash('message', 'Post successfully updated');
@@ -109,8 +115,8 @@ class Post extends Component
 
     public function confirmDeletePost($id)
     {
-        $deletePost = Story::findOrFail($id);
-        $deletePost->delete();
+        $helper = new PostHelper();
+        $helper->deletePost($id);
         $this->isOpenDeletePostModal = false;
 
         session()->flash('message', 'Post successfully deleted');
