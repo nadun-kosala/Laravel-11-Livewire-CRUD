@@ -29,12 +29,6 @@ class Post extends Component
 
     public $openToast = false;
 
-    public $showCreateModal = false;
-
-    // public function mount(){
-    //     dd($this->deletePost);
-    // }
-
     protected $rules = [
         'title' => 'required|string|max:255',
         'category' => 'required',
@@ -48,7 +42,6 @@ class Post extends Component
 
     public function openCreatePostModal()
     {
-        // dd("awaaaa");
         $this->isOpenCreateModal = true;
     }
 
@@ -70,14 +63,14 @@ class Post extends Component
         $helper->createPost($story);
         $this->isOpenCreateModal = false;
         $this->resetField();
-        // $this->showCreateModal = false;
 
-        // Session::flash('message', 'Post successfully created');
-        // Session::flash('type', 'success');
+        Session::flash('message', 'Post successfully created');
+        Session::flash('type', 'success');
     }
 
     public function openEditPostModal($id)
     {
+        $this->reset(['updateTitle', 'updateCategory', 'updateContent']);
         $this->editPost = Story::findOrFail($id);
         $this->updateTitle = $this->editPost->title;
         $this->updateCategory = $this->editPost->category;
@@ -85,10 +78,10 @@ class Post extends Component
         $this->isOpenEditPostModal = true;
     }
 
-    public function closeEditPostModal()
-    {
-        $this->isOpenEditPostModal = false;
-    }
+    // public function closeEditPostModal()
+    // {
+    //     $this->isOpenEditPostModal = false;
+    // }
 
     public function updatePost($id)
     {
@@ -116,10 +109,10 @@ class Post extends Component
         $this->deletePost = Story::findOrFail($id);
         $this->isOpenDeletePostModal = true;
     }
-    public function closeDeletePostModal()
-    {
-        $this->isOpenDeletePostModal = false;
-    }
+    // public function closeDeletePostModal()
+    // {
+    //     $this->isOpenDeletePostModal = false;
+    // }
 
     public function confirmDeletePost($id)
     {
