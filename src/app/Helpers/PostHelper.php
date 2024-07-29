@@ -3,11 +3,9 @@
 namespace App\Helpers;
 
 use App\Models\Story;
-use Livewire\WithPagination;
 
 class PostHelper
 {
-    use WithPagination;
 
     public function createPost(Story $story)
     {

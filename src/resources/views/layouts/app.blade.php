@@ -14,6 +14,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+
         <!-- Styles -->
         @livewireStyles
     </head>
@@ -39,7 +40,7 @@
         </div>
 
         @stack('modals')
-
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
         @livewireScripts
     </body>
 </html>

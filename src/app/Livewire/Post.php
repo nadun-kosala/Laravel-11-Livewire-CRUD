@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Story;
 use Livewire\WithPagination;
 use App\Helpers\PostHelper;
+use Illuminate\Support\Facades\Session;
 
 class Post extends Component
 {
@@ -28,6 +29,12 @@ class Post extends Component
 
     public $openToast = false;
 
+    public $showCreateModal = false;
+
+    // public function mount(){
+    //     dd($this->deletePost);
+    // }
+
     protected $rules = [
         'title' => 'required|string|max:255',
         'category' => 'required',
@@ -41,6 +48,7 @@ class Post extends Component
 
     public function openCreatePostModal()
     {
+        // dd("awaaaa");
         $this->isOpenCreateModal = true;
     }
 
@@ -61,11 +69,11 @@ class Post extends Component
         $helper = new PostHelper();
         $helper->createPost($story);
         $this->isOpenCreateModal = false;
-
         $this->resetField();
+        // $this->showCreateModal = false;
 
-        session()->flash('message', 'Post successfully created');
-        session()->flash('type', 'success');
+        // Session::flash('message', 'Post successfully created');
+        // Session::flash('type', 'success');
     }
 
     public function openEditPostModal($id)
@@ -99,8 +107,8 @@ class Post extends Component
 
         $this->isOpenEditPostModal = false;
 
-        session()->flash('message', 'Post successfully updated');
-        session()->flash('type', 'success');
+        Session::flash('message', 'Post successfully updated');
+        Session:: flash('type', 'success');
     }
 
     public function openDeletePostModal($id)
@@ -119,20 +127,20 @@ class Post extends Component
         $helper->deletePost($id);
         $this->isOpenDeletePostModal = false;
 
-        session()->flash('message', 'Post successfully deleted');
-        session()->flash('type', 'danger');
+        Session::flash('message', 'Post successfully deleted');
+         Session::flash('type', 'danger');
     }
 
     public function closeNotification()
     {
-        if (!session()->has('message')) {
+        if (! Session::has('message')) {
             $this->openToast = true;
         }
     }
 
     public function render()
     {
-        if (!session()->has('message')) {
+        if (! Session::has('message')) {
             $this->openToast = false;
         }
         $posts = Story::paginate(5);

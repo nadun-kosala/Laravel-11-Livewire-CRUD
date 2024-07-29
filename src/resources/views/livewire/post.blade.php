@@ -1,9 +1,10 @@
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($isOpenCreateModal)
-        <div>
+<div  class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div x-data="{ openCreateModal: @entangle('isOpenCreateModal')}">
+
             <div
+                x-show="openCreateModal"
                 class="fixed inset-0 z-40 min-h-full overflow-y-auto overflow-x-hidden transition flex items-center justify-center">
-                <div aria-hidden="true" class="fixed inset-0 w-full h-full bg-black/50 cursor-pointer">
+                <div aria-hidden="true" class="fixed inset-0 w-full h-full bg-black/50 cursor-pointer" @click="openCreateModal = false">
                 </div>
 
                 <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
@@ -15,7 +16,7 @@
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                 Add Post
                             </h3>
-                            <button type="button" wire:click="closeCreatePostModal"
+                            <button type="button" @click="openCreateModal=false"
                                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                                 data-modal-toggle="defaultModal">
                                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
@@ -81,8 +82,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    @endif
+
+    </div>
 
     @if ($isOpenEditPostModal)
         <div>
