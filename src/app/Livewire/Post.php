@@ -5,12 +5,13 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Story;
 use Livewire\WithPagination;
-use App\Helpers\PostHelper;
+use App\Handlers\PostHandler;
 use Illuminate\Support\Facades\Session;
 
 class Post extends Component
 {
     use WithPagination;
+    protected $postHandler;
 
     public $isOpenCreateModal = false;
     public $isOpenEditPostModal = false;
@@ -29,11 +30,19 @@ class Post extends Component
 
     public $openToast = false;
 
+    public $searchInput;
+    public $searchResult;
+
     protected $rules = [
         'title' => 'required|string|max:255',
         'category' => 'required',
         'content' => 'required',
     ];
+
+    function __construct()
+    {
+        $this->postHandler = new PostHandler();
+    }
 
     public function resetField()
     {
@@ -42,66 +51,67 @@ class Post extends Component
 
     public function openCreatePostModal()
     {
-        $this->isOpenCreateModal = true;
-    }
-
-    public function closeCreatePostModal()
-    {
-        $this->isOpenCreateModal = false;
         $this->resetField();
+        $this->isOpenCreateModal = true;
     }
 
     public function createPost()
     {
-        $this->validate();
-        $story = new Story([
-            'title' => $this->title,
-            'category' => $this->category,
-            'content' => $this->content,
-        ]);
-        $helper = new PostHelper();
-        $helper->createPost($story);
-        $this->isOpenCreateModal = false;
-        $this->resetField();
+        try {
+            $this->validate();
+            $story = new Story([
+                'title' => $this->title,
+                'category' => $this->category,
+                'content' => $this->content,
+            ]);
+            $this->postHandler->createPost($story);
+            $this->isOpenCreateModal = false;
+            $this->resetField();
 
-        Session::flash('message', 'Post successfully created');
-        Session::flash('type', 'success');
+            Session::flash('message', 'Post successfully created');
+            Session::flash('type', 'success');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function openEditPostModal($id)
     {
-        $this->reset(['updateTitle', 'updateCategory', 'updateContent']);
-        $this->editPost = Story::findOrFail($id);
-        $this->updateTitle = $this->editPost->title;
-        $this->updateCategory = $this->editPost->category;
-        $this->updateContent = $this->editPost->content;
-        $this->isOpenEditPostModal = true;
+        try {
+            $this->reset(['updateTitle', 'updateCategory', 'updateContent']);
+            $this->resetErrorBag();
+            $this->editPost = Story::findOrFail($id);
+            $this->updateTitle = $this->editPost->title;
+            $this->updateCategory = $this->editPost->category;
+            $this->updateContent = $this->editPost->content;
+            $this->isOpenEditPostModal = true;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
-
-    // public function closeEditPostModal()
-    // {
-    //     $this->isOpenEditPostModal = false;
-    // }
 
     public function updatePost($id)
     {
-        $this->validate([
-            'updateTitle' => 'required|string|max:255',
-            'updateCategory' => 'required',
-            'updateContent' => 'required',
-        ]);
-        $updateStory = new Story([
-            'title' => $this->updateTitle,
-            'category' => $this->updateCategory,
-            'content' => $this->updateContent,
-        ]);
-        $helper = new PostHelper();
-        $helper->updatePost($id, $updateStory);
+        try {
+            $this->validate([
+                'updateTitle' => 'required|string|max:255',
+                'updateCategory' => 'required',
+                'updateContent' => 'required',
+            ]);
+            $updateStory = new Story([
+                'title' => $this->updateTitle,
+                'category' => $this->updateCategory,
+                'content' => $this->updateContent,
+            ]);
+            $this->postHandler->updatePost($id, $updateStory);
 
-        $this->isOpenEditPostModal = false;
+            $this->isOpenEditPostModal = false;
 
-        Session::flash('message', 'Post successfully updated');
-        Session:: flash('type', 'success');
+            Session::flash('message', 'Post successfully updated');
+            Session::flash('type', 'success');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function openDeletePostModal($id)
@@ -109,34 +119,41 @@ class Post extends Component
         $this->deletePost = Story::findOrFail($id);
         $this->isOpenDeletePostModal = true;
     }
-    // public function closeDeletePostModal()
-    // {
-    //     $this->isOpenDeletePostModal = false;
-    // }
 
     public function confirmDeletePost($id)
     {
-        $helper = new PostHelper();
-        $helper->deletePost($id);
-        $this->isOpenDeletePostModal = false;
+        try {
+            $this->postHandler->deletePost($id);
+            $this->isOpenDeletePostModal = false;
 
-        Session::flash('message', 'Post successfully deleted');
-         Session::flash('type', 'danger');
+            Session::flash('message', 'Post successfully deleted');
+            Session::flash('type', 'danger');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function closeNotification()
     {
-        if (! Session::has('message')) {
+        if (!Session::has('message')) {
             $this->openToast = true;
         }
     }
 
+    public function search(){}
+
     public function render()
     {
-        if (! Session::has('message')) {
+        if (!Session::has('message')) {
             $this->openToast = false;
         }
-        $posts = Story::paginate(5);
-        return view('livewire.post', ['posts' => $posts]);
+
+        if ($this->searchInput) {
+            $searchResult = $this->postHandler->search($this->searchInput);
+            return view('livewire.post', ['posts' => $searchResult]);
+        }
+
+        $allPosts = $this->postHandler->allPosts();
+        return view('livewire.post', ['posts' => $allPosts]);
     }
 }

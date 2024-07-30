@@ -225,9 +225,25 @@
 
     <div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h1
-                class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-                Latest Posts</h1>
+            <div class="flex justify-between items-center my-4">
+                <h1 class="text-5xl font-extrabold leading-none tracking-tight text-gray-900  dark:text-white">
+                    Latest Posts</h1>
+                <div
+                    class="flex bg-slate-500 rounded-md border-2 border-blue-500 overflow-hidden max-w-md  font-[sans-serif]">
+                    <input type="email" placeholder="Search Something..." wire:model="searchInput"
+                        class="w-full outline-none bg-white text-gray-600 text-sm px-4 py-3" />
+                    <button type='button' wire:click="search"
+                        class="flex items-center justify-center bg-[#007bff] px-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px"
+                            class="fill-white">
+                            <path
+                                d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
             <div>
                 @if (session()->has('message'))
                     @if (!$openToast)
@@ -271,49 +287,38 @@
                 @endif
             </div>
 
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Post Id
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Title
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Category
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Content
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            <span class="sr-only">Edit</span>
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            <span class="sr-only">Delete</span>
-                        </th>
-                    </tr>
-                </thead>
+            <div class="my-5">
+                <button wire:click="openCreatePostModal"
+                    class="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-medium transition-all bg-blue-600 rounded-full hover:bg-white group">
+                    <span
+                        class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-full"></span>
+                    <span
+                        class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-blue-600">
+                        + Make a Post</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
                 @foreach ($posts as $post)
-                    <tbody>
-                        <tr
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                #{{ $post->id }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ $post->title }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $post->category }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ Str::words($post->content, 7) }}
-                            </td>
-                            <td class="px-6 py-4 text-right">
+                    <div
+                        class="max-w-lg mb-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition-all hover:translate-y-2">
+                        <a href="#">
+                            <img class="rounded-t-lg"
+                                src="https://53.fs1.hubspotusercontent-na1.net/hubfs/53/How%20To%20Post%20on%20IG.jpg"
+                                alt="" />
+                        </a>
+                        <div class="p-5">
+                            <a href="#">
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                    {{ $post->title }}</h5>
+                            </a>
+                            <p class="font-light text-gray-700 dark:text-gray-400">{{ $post->created_at->diffForHumans()}}</p>
+                            <p class="mb-3 font-semibold text-gray-700 dark:text-gray-400">{{ $post->category }} post
+                            </p>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ Str::words( $post->content, 20) }}</p>
+                            <div>
                                 <button wire:click="openEditPostModal({{ $post->id }})"
-                                    class="relative px-5 py-3 overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group">
+                                    class="relative px-2 py-1 overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group">
                                     <span
                                         class="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-blue-600 group-hover:w-full ease"></span>
                                     <span
@@ -328,10 +333,8 @@
                                         class="relative transition-colors duration-300 delay-200 group-hover:text-white ease">Edit
                                         Post</span>
                                 </button>
-                            </td>
-                            <td class="px-6 py-4 text-right">
                                 <button wire:click="openDeletePostModal({{ $post->id }})"
-                                    class="relative px-5 py-3 overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group">
+                                    class="relative  px-2 py-1 overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group">
                                     <span
                                         class="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-red-600 group-hover:w-full ease"></span>
                                     <span
@@ -346,24 +349,18 @@
                                         class="relative transition-colors duration-300 delay-200 group-hover:text-white ease">Delete
                                         Post</span>
                                 </button>
-                            </td>
-                        </tr>
-                    </tbody>
+                            </div>
+
+                        </div>
+                    </div>
                 @endforeach
-            </table>
-            {{ $posts->links() }}
+            </div>
+            <div>
+                {{ $posts->links() }}
+            </div>
         </div>
     </div>
 
-    <div class="mt-5">
-        <button wire:click="openCreatePostModal"
-            class="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-medium transition-all bg-blue-600 rounded-full hover:bg-white group">
-            <span
-                class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-full"></span>
-            <span
-                class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-blue-600">
-                Create Post</span>
-        </button>
-    </div>
+
 
 </div>

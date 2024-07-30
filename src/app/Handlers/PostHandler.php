@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Handlers;
 
 use App\Models\Story;
 
-class PostHelper
+class PostHandler
 {
 
     public function createPost(Story $story)
@@ -29,6 +29,14 @@ class PostHelper
     {
         $deletePost = Story::findOrFail($id);
         return $deletePost->delete();
+    }
+
+    public function search(string $searchInput){
+       return Story::where('title', 'like', "%{$searchInput}%")->paginate(6);
+    }
+
+    public function allPosts(){
+        return Story::paginate(6);
     }
 }
 
