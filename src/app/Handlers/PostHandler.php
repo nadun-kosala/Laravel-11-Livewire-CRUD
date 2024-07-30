@@ -9,7 +9,7 @@ class PostHandler
     public function createPost(Story $story, $photo)
     {
         if ($photo) {
-            $path = $photo->store('uploads', 'public');
+            $path = $photo->store('uploads', env('FILESYSTEM_DISK'));
             $filePath = 'storage/'. $path;
         }
         return Story::create([
@@ -23,7 +23,7 @@ class PostHandler
     public function updatePost(int $id, Story $updateStory, $photo)
     {
         if ($photo) {
-            $path = $photo->store('uploads', 'public');
+            $path = $photo->store('uploads', env('FILESYSTEM_DISK'));
             $filePath = 'storage/'. $path;
         }
         $editPost = Story::findOrFail($id);
@@ -37,6 +37,7 @@ class PostHandler
     public function deletePost($id)
     {
         $deletePost = Story::findOrFail($id);
+        unlink(public_path($deletePost->imagePath));
         return $deletePost->delete();
     }
 
@@ -47,7 +48,7 @@ class PostHandler
 
     public function allPosts()
     {
-        return Story::paginate(6);
+        return Story::latest()->paginate(6);
     }
 }
 
