@@ -7,10 +7,11 @@ use App\Models\Story;
 use Livewire\WithPagination;
 use App\Handlers\PostHandler;
 use Illuminate\Support\Facades\Session;
+use Livewire\WithFileUploads;
 
 class Post extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
     protected $postHandler;
 
     public $isOpenCreateModal = false;
@@ -31,12 +32,14 @@ class Post extends Component
     public $openToast = false;
 
     public $searchInput;
-    public $searchResult;
+
+    public $photo;
 
     protected $rules = [
         'title' => 'required|string|max:255',
         'category' => 'required',
         'content' => 'required',
+        'photo' => 'image|max:1024'
     ];
 
     function __construct()
@@ -58,13 +61,15 @@ class Post extends Component
     public function createPost()
     {
         try {
+
+
             $this->validate();
             $story = new Story([
                 'title' => $this->title,
                 'category' => $this->category,
                 'content' => $this->content,
             ]);
-            $this->postHandler->createPost($story);
+            $this->postHandler->createPost($story, $this->photo);
             $this->isOpenCreateModal = false;
             $this->resetField();
 
@@ -140,7 +145,9 @@ class Post extends Component
         }
     }
 
-    public function search(){}
+    public function search()
+    {
+    }
 
     public function render()
     {

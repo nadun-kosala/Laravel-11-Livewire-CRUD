@@ -7,8 +7,13 @@ use App\Models\Story;
 class PostHandler
 {
 
-    public function createPost(Story $story)
+    public function createPost(Story $story, $photo)
     {
+
+        if ($photo) {
+            $filePath = $photo->store('uploads', 'public');
+        }
+        dd($filePath);
         return Story::create([
             'title' => $story->title,
             'category' => $story->category,
