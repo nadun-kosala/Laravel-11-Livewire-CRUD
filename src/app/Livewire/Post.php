@@ -50,7 +50,7 @@ class Post extends Component
 
     public function resetField()
     {
-        $this->reset(['title', 'category', 'content']);
+        $this->reset(['title', 'category', 'content', 'photo']);
     }
 
     public function openCreatePostModal()
@@ -82,7 +82,7 @@ class Post extends Component
     public function openEditPostModal($id)
     {
         try {
-            $this->reset(['updateTitle', 'updateCategory', 'updateContent', 'updatePhoto']);
+            $this->reset(['updateTitle', 'updateCategory', 'updateContent', 'newPhoto']);
             $this->resetErrorBag();
             $this->editPost = Story::findOrFail($id);
             $this->updateTitle = $this->editPost->title;
