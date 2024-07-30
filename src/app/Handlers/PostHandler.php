@@ -2,16 +2,24 @@
 
 namespace App\Handlers;
 
+use App\Mail\PostCreateEmail;
 use App\Models\Story;
+use Illuminate\Support\Facades\Mail;
 
 class PostHandler
 {
+    public $mailData;
+
+
     public function createPost(Story $story, $photo)
     {
         if ($photo) {
             $path = $photo->store('uploads', env('FILESYSTEM_DISK'));
             $filePath = 'storage/'. $path;
         }
+        Mail::to('nadun@thesanmark.com')->send(new PostCreateEmail([
+            'name' => 'kosala'
+        ]));
         return Story::create([
             'title' => $story->title,
             'category' => $story->category,
