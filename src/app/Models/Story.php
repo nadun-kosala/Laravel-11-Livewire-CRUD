@@ -9,9 +9,5 @@ class Story extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'category',
-        'content',
-    ];
+    protected $fillable = ['title', 'category', 'content', 'imagePath'];
 }

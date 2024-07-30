@@ -6,27 +6,31 @@ use App\Models\Story;
 
 class PostHandler
 {
-
     public function createPost(Story $story, $photo)
     {
-
         if ($photo) {
-            $filePath = $photo->store('uploads', 'public');
+            $path = $photo->store('uploads', 'public');
+            $filePath = 'storage/'. $path;
         }
-        dd($filePath);
         return Story::create([
             'title' => $story->title,
             'category' => $story->category,
             'content' => $story->content,
+            'imagePath' => $filePath ?? null,
         ]);
     }
 
-    public function updatePost(int $id, Story $updateStory)
+    public function updatePost(int $id, Story $updateStory, $photo)
     {
+        if ($photo) {
+            $path = $photo->store('uploads', 'public');
+            $filePath = 'storage/'. $path;
+        }
         $editPost = Story::findOrFail($id);
         $editPost->title = $updateStory->title;
         $editPost->category = $updateStory->category;
         $editPost->content = $updateStory->content;
+        $editPost->imagePath = $filePath ?? null;
         return $editPost->save();
     }
 
@@ -36,11 +40,13 @@ class PostHandler
         return $deletePost->delete();
     }
 
-    public function search(string $searchInput){
-       return Story::where('title', 'like', "%{$searchInput}%")->paginate(6);
+    public function search(string $searchInput)
+    {
+        return Story::where('title', 'like', "%{$searchInput}%")->paginate(6);
     }
 
-    public function allPosts(){
+    public function allPosts()
+    {
         return Story::paginate(6);
     }
 }

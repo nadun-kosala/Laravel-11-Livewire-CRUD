@@ -21,10 +21,13 @@ class Post extends Component
     public $title;
     public $category;
     public $content;
+    public $photo;
 
     public $updateTitle;
     public $updateCategory;
     public $updateContent;
+    public $updatePhoto;
+    public $newPhoto;
     public $editPost;
 
     public $deletePost;
@@ -32,8 +35,6 @@ class Post extends Component
     public $openToast = false;
 
     public $searchInput;
-
-    public $photo;
 
     protected $rules = [
         'title' => 'required|string|max:255',
@@ -61,8 +62,6 @@ class Post extends Component
     public function createPost()
     {
         try {
-
-
             $this->validate();
             $story = new Story([
                 'title' => $this->title,
@@ -83,12 +82,13 @@ class Post extends Component
     public function openEditPostModal($id)
     {
         try {
-            $this->reset(['updateTitle', 'updateCategory', 'updateContent']);
+            $this->reset(['updateTitle', 'updateCategory', 'updateContent', 'updatePhoto']);
             $this->resetErrorBag();
             $this->editPost = Story::findOrFail($id);
             $this->updateTitle = $this->editPost->title;
             $this->updateCategory = $this->editPost->category;
             $this->updateContent = $this->editPost->content;
+            $this->updatePhoto = $this->editPost->imagePath;
             $this->isOpenEditPostModal = true;
         } catch (\Throwable $th) {
             throw $th;
@@ -102,13 +102,14 @@ class Post extends Component
                 'updateTitle' => 'required|string|max:255',
                 'updateCategory' => 'required',
                 'updateContent' => 'required',
+                'newPhoto' => 'nullable|image|max:1024',
             ]);
             $updateStory = new Story([
                 'title' => $this->updateTitle,
                 'category' => $this->updateCategory,
                 'content' => $this->updateContent,
             ]);
-            $this->postHandler->updatePost($id, $updateStory);
+            $this->postHandler->updatePost($id, $updateStory, $this->newPhoto);
 
             $this->isOpenEditPostModal = false;
 

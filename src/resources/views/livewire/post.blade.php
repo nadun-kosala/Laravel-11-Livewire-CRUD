@@ -68,7 +68,12 @@
                             @enderror
                         </div>
                         <div>
-                            <input type="file" wire:model="photo">
+                            <label for="title"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Post
+                                Image</label>
+                            <input type="file" wire:model="photo"
+                                class="w-full text-gray-500 font-medium text-sm bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded" />
+                            <p class="text-xs text-gray-400 mt-2">PNG, JPG (Max:1MB).</p>
                         </div>
                     </div>
                     <button type="button" wire:click="createPost"
@@ -153,6 +158,21 @@
                                     class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="Write post content here"></textarea>
                                 @error('updateContent')
+                                    <p class="text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                @if ($updatePhoto)
+                                    <label for="content"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current
+                                        Image</label>
+                                    <img src="{{ asset($updatePhoto) }}" alt="Loading..." class="max-w-20 mb-2">
+                                @endif
+                                <input type="file" wire:model="newPhoto"
+                                    class="w-full text-gray-500 font-medium text-sm bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded" />
+                                <p class="text-xs text-gray-400 mt-2">PNG, JPG (Max:1MB).</p>
+                                @error('updatePhoto')
                                     <p class="text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -306,19 +326,20 @@
                     <div
                         class="max-w-lg mb-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition-all hover:translate-y-2">
                         <a href="#">
-                            <img class="rounded-t-lg"
-                                src="https://53.fs1.hubspotusercontent-na1.net/hubfs/53/How%20To%20Post%20on%20IG.jpg"
-                                alt="" />
+                            <img class="rounded-t-lg" src='{{ env('APP_URL') }}/{{ $post->imagePath }}'
+                                alt="Not Found" />
                         </a>
                         <div class="p-5">
                             <a href="#">
                                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                                     {{ $post->title }}</h5>
                             </a>
-                            <p class="font-light text-gray-700 dark:text-gray-400">{{ $post->created_at->diffForHumans()}}</p>
+                            <p class="font-light text-gray-700 dark:text-gray-400">
+                                {{ $post->created_at->diffForHumans() }}</p>
                             <p class="mb-3 font-semibold text-gray-700 dark:text-gray-400">{{ $post->category }} post
                             </p>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ Str::words( $post->content, 20) }}</p>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                                {{ Str::words($post->content, 20) }}</p>
                             <div>
                                 <button wire:click="openEditPostModal({{ $post->id }})"
                                     class="relative px-2 py-1 overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group">
