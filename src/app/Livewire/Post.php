@@ -40,7 +40,7 @@ class Post extends Component
         'title' => 'required|string|max:255',
         'category' => 'required',
         'content' => 'required',
-        'photo' => 'image|max:1024'
+        'photo' => 'nullable|image|mimes:png,jpg|max:1024'
     ];
 
     function __construct()
@@ -68,6 +68,7 @@ class Post extends Component
                 'category' => $this->category,
                 'content' => $this->content,
             ]);
+            
             $this->postHandler->createPost($story, $this->photo);
             $this->isOpenCreateModal = false;
             $this->resetField();

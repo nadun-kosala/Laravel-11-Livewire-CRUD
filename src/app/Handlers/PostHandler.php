@@ -4,12 +4,11 @@ namespace App\Handlers;
 
 use App\Mail\PostCreateEmail;
 use App\Models\Story;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class PostHandler
 {
-    public $mailData;
-
 
     public function createPost(Story $story, $photo)
     {
@@ -17,8 +16,9 @@ class PostHandler
             $path = $photo->store('uploads', env('FILESYSTEM_DISK'));
             $filePath = 'storage/'. $path;
         }
-        Mail::to('nadun@thesanmark.com')->send(new PostCreateEmail([
-            'name' => 'kosala'
+        Mail::to(Auth::user()->email)->send(new PostCreateEmail([
+            'name' => Auth::user()->name,
+            'email' => Auth::user()->email
         ]));
         return Story::create([
             'title' => $story->title,
@@ -38,7 +38,7 @@ class PostHandler
         $editPost->title = $updateStory->title;
         $editPost->category = $updateStory->category;
         $editPost->content = $updateStory->content;
-        $editPost->imagePath = $filePath ?? null;
+        $editPost->imagePath = $filePath ?? $editPost->imagePath;
         return $editPost->save();
     }
 

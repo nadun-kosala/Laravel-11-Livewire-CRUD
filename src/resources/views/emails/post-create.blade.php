@@ -49,7 +49,7 @@
 
         <div class="message">
             <p>Dear {{ $mailData['name'] }},</p>
-            <p>Thank you for providing your details Your Company Name.
+            <p>You post was created under <span>{{ $mailData['email'] }}</span> email</p>
         </div>
 
     </div>

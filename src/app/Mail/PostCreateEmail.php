@@ -13,12 +13,14 @@ class PostCreateEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $mailData;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($mailData)
     {
-        //
+        $this->mailData = $mailData;
     }
 
     /**
@@ -40,6 +42,7 @@ class PostCreateEmail extends Mailable
             view: 'emails.post-create',
         );
     }
+
 
     /**
      * Get the attachments for the message.

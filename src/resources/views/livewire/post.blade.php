@@ -74,6 +74,9 @@
                             <input type="file" wire:model="photo"
                                 class="w-full text-gray-500 font-medium text-sm bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded" />
                             <p class="text-xs text-gray-400 mt-2">PNG, JPG (Max:1MB).</p>
+                            @error('photo')
+                            <p class="text-red-600">{{ $message }}</p>
+                        @enderror
                         </div>
                     </div>
                     <button type="button" wire:click="createPost"
@@ -326,7 +329,7 @@
                     <div
                         class="max-w-lg mb-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition-all hover:translate-y-2">
                         <a href="#">
-                            <img class="rounded-t-lg" src='{{ env('APP_URL') }}/{{ $post->imagePath }}'
+                            <img class="rounded-t-lg" width="512px" src='{{ $post->imagePath ? env('APP_URL'). '/' . $post->imagePath  : "https://wingandaprayer.live/wp-content/uploads/2018/07/no-image-available.jpg?w=640"}}'
                                 alt="Not Found" />
                         </a>
                         <div class="p-5">
@@ -334,8 +337,8 @@
                                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                                     {{ $post->title }}</h5>
                             </a>
-                            <p class="font-light text-gray-700 dark:text-gray-400">
-                                {{ $post->created_at->diffForHumans() }}</p>
+                            <p class="font-light italic text-gray-700 dark:text-gray-400">
+                                Posted {{ $post->created_at->diffForHumans() }}</p>
                             <p class="mb-3 font-semibold text-gray-700 dark:text-gray-400">{{ $post->category }} post
                             </p>
                             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
