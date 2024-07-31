@@ -68,7 +68,7 @@ class Post extends Component
                 'category' => $this->category,
                 'content' => $this->content,
             ]);
-            
+
             $this->postHandler->createPost($story, $this->photo);
             $this->isOpenCreateModal = false;
             $this->resetField();
@@ -132,9 +132,9 @@ class Post extends Component
         try {
             $this->postHandler->deletePost($id);
             $this->isOpenDeletePostModal = false;
-
             Session::flash('message', 'Post successfully deleted');
-            Session::flash('type', 'danger');
+            Session::flash('type', 'success');
+            return redirect(request()->header('Referer'));
         } catch (\Throwable $th) {
             throw $th;
         }
