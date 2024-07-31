@@ -41,15 +41,24 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        .heading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-
+        <div class="heading">Post Created</div>
         <div class="message">
             <p>Dear {{ $mailData['name'] }},</p>
-            <p>Your post was created under <span>{{ $mailData['email'] }}</span> email</p>
+            <p>We are excited to inform you that your post has been successfully created under the email address <span>
+                    <a href="mailto:{{ $mailData['email'] }}">{{ $mailData['email'] }}</a>.
+            </p>
         </div>
 
     </div>
