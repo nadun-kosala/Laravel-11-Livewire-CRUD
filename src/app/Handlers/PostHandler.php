@@ -9,30 +9,32 @@ use Illuminate\Support\Facades\Mail;
 
 class PostHandler
 {
-
     public function createPost(Story $story, $photo)
     {
         if ($photo) {
             $path = $photo->store('uploads', env('FILESYSTEM_DISK'));
-            $filePath = 'storage/'. $path;
+            $filePath = 'storage/' . $path;
         }
-        Mail::to(Auth::user()->email)->send(new PostCreateEmail([
-            'name' => Auth::user()->name,
-            'email' => Auth::user()->email
-        ]));
-        return Story::create([
+
+        Story::create([
             'title' => $story->title,
             'category' => $story->category,
             'content' => $story->content,
             'imagePath' => $filePath ?? null,
         ]);
+        return Mail::to(Auth::user()->email)->send(
+            new PostCreateEmail([
+                'name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ]),
+        );
     }
 
     public function updatePost(int $id, Story $updateStory, $photo)
     {
         if ($photo) {
             $path = $photo->store('uploads', env('FILESYSTEM_DISK'));
-            $filePath = 'storage/'. $path;
+            $filePath = 'storage/' . $path;
         }
         $editPost = Story::findOrFail($id);
         $editPost->title = $updateStory->title;
@@ -45,7 +47,9 @@ class PostHandler
     public function deletePost($id)
     {
         $deletePost = Story::findOrFail($id);
-        unlink(public_path($deletePost->imagePath));
+        if ($deletePost->imagePath) {
+            unlink(public_path($deletePost->imagePath));
+        }
         return $deletePost->delete();
     }
 
