@@ -259,7 +259,7 @@
                     Latest Posts</h1>
                 <div
                     class="flex bg-slate-500 rounded-md border-2 border-blue-500 overflow-hidden max-w-md  font-[sans-serif]">
-                    <input type="email" placeholder="Search Something..." wire:model="searchInput"
+                    <input type="email" placeholder="Search using title..." wire:model="searchInput"
                         class="w-full outline-none bg-white text-gray-600 text-sm px-4 py-3" />
                     <button type='button' wire:click="search"
                         class="flex items-center justify-center bg-[#007bff] px-5">
@@ -327,7 +327,7 @@
                 </button>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                 @foreach ($posts as $post)
                     <div
                         class="max-w-lg mb-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition-all hover:translate-y-2">
