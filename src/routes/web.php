@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Post;
+use App\Livewire\Test;
 use App\Livewire\ViewPost;
 
 Route::get('/', function () {
@@ -16,3 +17,5 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/view-post/{id}', ViewPost::class)->name('view.posts');
 });
 
+
+Route::get('/test', Test::class)->name('test');
